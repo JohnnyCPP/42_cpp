@@ -1,70 +1,139 @@
 #include "Account.hpp"
+#include <ctime>
+#include <iostream>
+#include <iomanip>
 
 int	::Account::_nbAccounts = 0;
 int	::Account::_totalAmount = 0;
 int	::Account::_totalNbDeposits = 0;
 int	::Account::_totalNbWithdrawals = 0;
 
-Account(int initial_deposit) :	_accountIndex(::Account::_nbAccounts), _amount(0), _nbDeposits(0), _nbWithdrawals(0)
+::Account::Account(int initial_deposit) :	_accountIndex(::Account::_nbAccounts), _amount(0), _nbDeposits(0), _nbWithdrawals(0)
 {
 	::Account::_nbAccounts ++;
-	this->makeDeposit(initial_deposit);
-	std::cout << "TODO: LOG CON." << std::endl;
+	this->_amount += initial_deposit;
+	::Account::_totalAmount += initial_deposit;
+	::Account::_displayTimestamp();
+	std::cout	<< "index:" << this->_accountIndex
+				<< ";amount:" << this->_amount
+				<< ";created"
+				<< std::endl;
 }
 
-~Account(void)
+::Account::~Account(void)
 {
-	::Account::_nbAccounts --;
-	std::cout << "TODO: LOG DES." << std::endl;
+	::Account::_displayTimestamp();
+	std::cout	<< "index:" << this->_accountIndex
+				<< ";amount:" << this->_amount
+				<< ";closed"
+				<< std::endl;
 }
 
-void	makeDeposit(int deposit)
+void	::Account::makeDeposit(int deposit)
 {
+	int	previous;
+
+	previous = this->_amount;
 	this->_amount += deposit;
 	this->_nbDeposits ++;
 	::Account::_totalAmount += deposit;
 	::Account::_totalNbDeposits ++;
+	::Account::_displayTimestamp();
+	std::cout	<< "index:" << this->_accountIndex
+				<< ";p_amount:" << previous
+				<< ";deposit:" << deposit
+				<< ";amount:" << this->_amount
+				<< ";nb_deposits:" << this->_nbDeposits
+				<< std::endl;
 }
 
-bool	makeWithdrawal(int withdrawal)
+bool	::Account::makeWithdrawal(int withdrawal)
 {
+	int	previous;
+
+	previous = this->_amount;
+	if (this->_amount >= withdrawal)
+	{
+		this->_amount -= withdrawal;
+		this->_nbWithdrawals ++;
+		::Account::_totalAmount -= withdrawal;
+		::Account::_totalNbWithdrawals ++;
+		::Account::_displayTimestamp();
+		std::cout	<< "index:" << this->_accountIndex
+					<< ";p_amount:" << previous
+					<< ";withdrawal:" << withdrawal 
+					<< ";amount:" << this->_amount
+					<< ";nb_withdrawals:" << this->_nbWithdrawals
+					<< std::endl;
+		return (true);
+	}
+	::Account::_displayTimestamp();
+	std::cout	<< "index:" << this->_accountIndex
+				<< ";p_amount:" << previous
+				<< ";withdrawal:refused"
+				<< std::endl;
+	return (false);
 }
 
-int		checkAmount(void) const
+int		::Account::checkAmount(void) const
 {
+	return (this->_amount);
 }
 
-void	displayStatus(void) const
+void	::Account::displayStatus(void) const
 {
+	::Account::_displayTimestamp();
+	std::cout	<< "index:" << this->_accountIndex
+				<< ";amount:" << this->_amount
+				<< ";deposits:" << this->_nbDeposits 
+				<< ";withdrawals:" << this->_nbWithdrawals
+				<< std::endl;
 }
 
-int	getNbAccounts(void)
+int	::Account::getNbAccounts(void)
 {
 	return (::Account::_nbAccounts);
 }
 
-int	getTotalAmount(void)
+int	::Account::getTotalAmount(void)
 {
 	return (::Account::_totalAmount);
 }
 
-int	getNbDeposits(void)
+int	::Account::getNbDeposits(void)
 {
 	return (::Account::_totalNbDeposits);
 }
 
-int	getNbWithdrawals(void)
+int	::Account::getNbWithdrawals(void)
 {
 	return (::Account::_totalNbWithdrawals);
 }
 
-void	displayAccountsInfos(void)
+void	::Account::displayAccountsInfos(void)
 {
+	::Account::_displayTimestamp();
+	std::cout	<< "accounts:" << ::Account::_nbAccounts
+				<< ";total:" << ::Account::_totalAmount
+				<< ";deposits:" << ::Account::_totalNbDeposits 
+				<< ";withdrawals:" << ::Account::_totalNbWithdrawals
+				<< std::endl;
 }
 
-void	_displayTimestamp(void)
+void	::Account::_displayTimestamp(void)
 {
-}
+	std::time_t			now;
+	std::tm				*timestamp;
 
-Account(void)
-{}
+	now = std::time(0);
+	timestamp = std::localtime(&now);
+	std::cout	<< "["
+				<< (1900 + timestamp->tm_year)
+				<< std::setfill('0') << std::setw(2) << (timestamp->tm_mon + 1)
+				<< std::setfill('0') << std::setw(2) << timestamp->tm_mday
+				<< "_"
+				<< std::setfill('0') << std::setw(2) << timestamp->tm_hour
+				<< std::setfill('0') << std::setw(2) << timestamp->tm_min
+				<< std::setfill('0') << std::setw(2) << timestamp->tm_sec
+				<< "] ";
+}
