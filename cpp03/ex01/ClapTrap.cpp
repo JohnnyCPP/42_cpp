@@ -2,25 +2,25 @@
 
 ::ClapTrap::ClapTrap() :	name(""), hitPoints(10), energyPoints(10), attackDamage(0)
 {
-	std::cout	<< "Default constructor executed." 
+	std::cout	<< "ClapTrap default constructor executed." 
 				<< std::endl;
 }
 
 ::ClapTrap::~ClapTrap()
 {
-	std::cout	<< "Destructor executed." 
+	std::cout	<< "ClapTrap destructor executed." 
 				<< std::endl;
 }
 
 ::ClapTrap::ClapTrap(const ClapTrap& that) :	name(that.name), hitPoints(that.hitPoints), energyPoints(that.energyPoints), attackDamage(that.attackDamage)
 {
-	std::cout	<< "Copy constructor executed." 
+	std::cout	<< "ClapTrap copy constructor executed." 
 				<< std::endl;
 }
 
 ClapTrap&	::ClapTrap::operator=(const ClapTrap& that)
 {
-	std::cout	<< "Copy assignment operator executed." 
+	std::cout	<< "ClapTrap copy assignment operator executed." 
 				<< std::endl;
 	if (this != &that)
 	{
@@ -34,8 +34,54 @@ ClapTrap&	::ClapTrap::operator=(const ClapTrap& that)
 
 ::ClapTrap::ClapTrap(const std::string& name) :	name(name), hitPoints(10), energyPoints(10), attackDamage(0)
 {
-	std::cout	<< "Name constructor executed." 
+	std::cout	<< "ClapTrap name constructor executed." 
 				<< std::endl;
+}
+
+::ClapTrap::ClapTrap(const std::string& name, int hitPoints, int energyPoints, int attackDamage) :	name(name), hitPoints(hitPoints), energyPoints(energyPoints), attackDamage(attackDamage)
+{
+	std::cout	<< "ClapTrap(std::string, int, int, int) executed."
+				<< std::endl;
+}
+
+void			::ClapTrap::setName(const std::string& name)
+{
+	this->name = name;
+}
+
+std::string		ClapTrap::getName() const
+{
+	return (this->name);
+}
+
+void	::ClapTrap::setHitPoints(const int hitPoints)
+{
+	this->hitPoints = hitPoints;
+}
+
+int		::ClapTrap::getHitPoints() const
+{
+	return (this->hitPoints);
+}
+
+void	::ClapTrap::setEnergyPoints(const int energyPoints)
+{
+	this->energyPoints = energyPoints;
+}
+
+int		::ClapTrap::getEnergyPoints() const
+{
+	return (this->energyPoints);
+}
+
+void	::ClapTrap::setAttackDamage(const int attackDamage)
+{
+	this->attackDamage = attackDamage;
+}
+
+int		::ClapTrap::getAttackDamage() const
+{
+	return (this->attackDamage);
 }
 
 void	::ClapTrap::attack(const std::string& target)
