@@ -1,0 +1,7 @@
+[x] AMateria
+[x] Ice
+[x] Cure
+[ ] ICharacter
+[ ] Character
+[ ] IMateriaSource
+[ ] MateriaSource
