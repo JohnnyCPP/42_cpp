@@ -4,6 +4,7 @@
 # include "AMateria.hpp"
 # include "ICharacter.hpp"
 # include "print.hpp"
+# include "constants.hpp"
 
 class	Cure :	public AMateria
 {

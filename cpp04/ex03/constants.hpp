@@ -3,7 +3,11 @@
 
 # include <string>
 
-extern const int			INVENTORY_SIZE;
+# define INVENTORY_SIZE 4
+# define TEMPLATE_SIZE 4
+# define FLOOR_SIZE 20
+# define NOT_FOUND -1
+
 extern const std::string	MATERIA_ICE;
 extern const std::string	MATERIA_CURE;
 

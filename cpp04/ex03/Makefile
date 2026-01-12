@@ -9,9 +9,8 @@ SRC_FILES		= constants.cpp \
 				  AMateria.cpp \
 				  Ice.cpp \
 				  Cure.cpp \
-				  ICharacter.cpp \
+				  Floor.cpp \
 				  Character.cpp \
-				  IMateriaSource.cpp \
 				  MateriaSource.cpp \
 				  main.cpp
 OBJ_FILES		= $(SRC_FILES:.cpp=.o)

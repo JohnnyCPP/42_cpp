@@ -1,8 +1,12 @@
 #ifndef A_MATERIA_HPP
 # define A_MATERIA_HPP
 
-# include "ICharacter.hpp"
 # include <string>
+
+// to avoid circular include
+// AMateria.hpp -> ICharacter.hpp
+// ICharacter.hpp -> AMateria.hpp
+class	ICharacter;
 
 class	AMateria
 {
