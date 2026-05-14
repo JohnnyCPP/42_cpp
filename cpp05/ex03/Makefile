@@ -1,0 +1,42 @@
+NAME			= interns
+
+GCC				= c++
+FLAGS			= -Wall -Wextra -Werror -std=c++98
+SANITIZE_FLAGS	= -fsanitize=address
+
+SRC_FILES		= AForm.cpp  Bureaucrat.cpp  Intern.cpp  main.cpp  PresidentialPardonForm.cpp  RobotomyRequestForm.cpp  ShrubberyCreationForm.cpp
+OBJ_FILES		= $(SRC_FILES:.cpp=.o)
+
+
+all: ${NAME}
+
+
+# "$@" refers to the target (%.o)
+# "$<" refers to the dependency (%.cpp)
+%.o: %.cpp
+	${GCC} ${FLAGS} -c $< -o $@
+
+
+${NAME}: ${OBJ_FILES}
+	${GCC} ${FLAGS} ${OBJ_FILES} -o ${NAME}
+
+
+clean:
+	rm -f ${OBJ_FILES}
+
+
+fclean: clean
+	rm -f ${NAME}
+	rm -f garden_shrubbery
+	rm -f yard_shrubbery
+	rm -f test_shrubbery
+
+
+re: fclean all
+
+
+sanitize: fclean ${OBJ_FILES}
+	${GCC} ${FLAGS} ${SANITIZE_FLAGS} ${OBJ_FILES} -o ${NAME}
+
+
+.PHONY: all, clean, fclean, re, sanitize
