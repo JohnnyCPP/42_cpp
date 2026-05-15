@@ -1,10 +1,10 @@
-NAME			= todo
+NAME			= identify
 
 GCC				= c++
 FLAGS			= -Wall -Wextra -Werror -std=c++98
 SANITIZE_FLAGS	= -fsanitize=address
 
-SRC_FILES		= todo
+SRC_FILES		= Base.cpp  main.cpp
 OBJ_FILES		= $(SRC_FILES:.cpp=.o)
 
 
