@@ -1,7 +1,7 @@
-NAME			= templ_demo
+NAME			= falafel_chef
 
 GCC				= c++
-FLAGS			= -Wall -Wextra -Werror -std=c++98
+FLAGS			= -Wall -Wextra -Werror -std=c++98 -ftemplate-depth=79000
 SANITIZE_FLAGS	= -fsanitize=address
 
 SRC_FILES		= main.cpp
