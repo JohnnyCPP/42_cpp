@@ -308,13 +308,13 @@ PmergeMe::PmergeMe(char **argv)
 		arg = argv[i];
 		if (!isNumber(arg))
 		{
-			std::cerr << "Error: Invalid number format - " << arg << std::endl;
+			std::cerr << "Error: Invalid number format: " << arg << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		value = std::atol(arg.c_str());
 		if (value > INT_MAX || value < 0)
 		{
-			std::cerr << "Error: Number out of range (0 to INT_MAX) - " << arg << std::endl;
+			std::cerr << "Error: Number out of range (0 to INT_MAX): " << arg << std::endl;
 			std::exit(EXIT_FAILURE);
 		}
 		vector.push_back(static_cast<int>(value));
