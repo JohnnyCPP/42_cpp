@@ -1,49 +1,45 @@
 #ifndef PMERGEME_HPP
 # define PMERGEME_HPP
 
+# include <iostream>
 # include <vector>
 # include <deque>
-# include <string>
-# include <iostream>
-# include <sstream>
-# include <climits>
 # include <ctime>
-# include <iomanip>
+# include <sstream>
+# include <algorithm>
 # include <cstdlib>
+# include <climits>
 
 class PmergeMe
 {
-	private:
+private:
 
-		std::vector<int>	vec;
-		std::deque<int>		deq;
+	std::vector<int>	vector;
+	std::deque<int>		deque;
 
-		void	parseInput(int argc, char **argv);
-		void	displaySequence(std::string const& msg, std::vector<int> const& seq) const;
-		void	displaySequence(std::string const& msg, std::deque<int> const& seq) const;
-		
-		void	mergeInsertSortVector(std::vector<int>& arr);
-		void	mergeInsertSortDeque(std::deque<int>& arr);
-		
-		void	insertionSortVector(std::vector<int>& arr, int left, int right);
-		void	mergeVector(std::vector<int>& arr, int left, int mid, int right);
-		void	fordJohnsonMergeInsertVector(std::vector<int>& arr, int left, int right);
-		
-		void	insertionSortDeque(std::deque<int>& arr, int left, int right);
-		void	mergeDeque(std::deque<int>& arr, int left, int mid, int right);
-		void	fordJohnsonMergeInsertDeque(std::deque<int>& arr, int left, int right);
-		
-		double	getTimeInMicroseconds(clock_t start, clock_t end) const;
+	PmergeMe();
 
-	public:
+	bool				isNumber(const std::string& str) const;
+	bool				hasDuplicates(const std::vector<int>& nums) const;
 
-		PmergeMe();
-		PmergeMe(PmergeMe const& that);
-		~PmergeMe();
-		PmergeMe& operator=(PmergeMe const& that);
+	std::vector<int>	fordJohnson(std::vector<int>& nums);
+	std::vector<int>	createPairs(std::vector<int>& nums);
+	void				mergeInsert(std::vector<int>& main, std::vector<int>& pend);
+	std::vector<int>	getVJacobsthalOf(int n);
 
-		void	sortAndDisplay(int argc, char **argv);
+	std::deque<int>		fordJohnson(std::deque<int>& nums);
+	std::deque<int>		createPairs(std::deque<int>& nums);
+	void				mergeInsert(std::deque<int>& main, std::deque<int>& pend);
+	std::deque<int>		getDJacobsthalOf(int n);
 
+public:
+
+	PmergeMe(char **argv);
+	PmergeMe(const PmergeMe& that);
+	PmergeMe& operator=(const PmergeMe& that);
+	~PmergeMe();
+
+	void	sort();
 };
 
 #endif

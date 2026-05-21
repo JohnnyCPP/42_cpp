@@ -2,13 +2,21 @@
 
 int	main(int argc, char **argv)
 {
-	PmergeMe	sorter;
-
 	if (argc < 2)
 	{
-		std::cerr << "Error: need at least one positive integer" << std::endl;
-		return (1);
+		std::cout << "Usage: ./PmergeMe <numbers>" << std::endl;
+		return (EXIT_FAILURE);
 	}
-	sorter.sortAndDisplay(argc, argv);
-	return (0);
+	try
+	{
+		PmergeMe	pmergeMe(argv);
+
+		pmergeMe.sort();
+	}
+	catch (const std::exception& e)
+	{
+		std::cerr << "Error: " << e.what() << std::endl;
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
 }

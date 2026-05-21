@@ -1,293 +1,400 @@
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe()
+bool	PmergeMe::isNumber(const std::string& str) const
 {
+	size_t	i;
+	bool	hasDigit;
+
+	i = 0;
+	hasDigit = false;
+	if (str.empty())
+		return (false);
+	if (str[i] == '+')
+		++ i;
+	while (i < str.length())
+	{
+		if (!std::isdigit(str[i]))
+			return (false);
+		hasDigit = true;
+		++ i;
+	}
+	return (hasDigit);
 }
 
-PmergeMe::PmergeMe(PmergeMe const& that)
+bool	PmergeMe::hasDuplicates(const std::vector<int>& nums) const
+{
+	std::vector<int>	copy;
+	size_t				i;
+
+	copy = nums;
+	i = 1;
+	std::sort(copy.begin(), copy.end());
+	while (i < copy.size())
+	{
+		if (copy[i] == copy[i - 1])
+			return (true);
+		++ i;
+	}
+	return (false);
+}
+
+std::vector<int>	PmergeMe::fordJohnson(std::vector<int>& nums)
+{
+	std::vector<int>::iterator	pos;
+	std::vector<int>			larger;
+	std::vector<int>			sorted;
+	std::vector<int>			pend;
+	std::vector<int>			pairsCopy;
+	size_t						i;
+	int							odd;
+	bool						hasOdd;
+
+	i = 0;
+	odd = -1;
+	hasOdd = false;
+	if (nums.size() <= 1)
+		return (nums);
+	if (nums.size() % 2 != 0)
+	{
+		odd = nums.back();
+		nums.pop_back();
+		hasOdd = true;
+	}
+	larger = createPairs(nums);
+	sorted = fordJohnson(larger);
+	pairsCopy = nums;
+	while (i < pairsCopy.size())
+	{
+		pend.push_back(pairsCopy[i + 1]);
+		i += 2;
+	}
+	if (!pend.empty())
+		mergeInsert(sorted, pend);
+	if (hasOdd)
+	{
+		pos = std::lower_bound(sorted.begin(), sorted.end(), odd);
+		sorted.insert(pos, odd);
+	}
+	return (sorted);
+}
+
+std::vector<int>	PmergeMe::createPairs(std::vector<int>& nums)
+{
+	std::vector<int>	larger;
+	size_t				i;
+	int					a;
+	int					b;
+
+	i = 0;
+	while (i + 1 < nums.size())
+	{
+		a = nums[i];
+		b = nums[i + 1];
+		if (a < b)
+			std::swap(a, b);
+		larger.push_back(a);
+		nums[i] = a;
+		nums[i + 1] = b;
+		i += 2;
+	}
+	return (larger);
+}
+
+void	PmergeMe::mergeInsert(std::vector<int>& main, std::vector<int>& pend)
+{
+	std::vector<int>::iterator	pos;
+	std::vector<int>			jacob;
+	std::vector<int>			order;
+	std::vector<bool>			inserted;
+	size_t						i;
+	size_t						j;
+	int							idx;
+	int							value;
+
+	i = 2;
+	j = 0;
+	idx = 0;
+	value = 0;
+	if (pend.empty())
+		return ;
+	jacob = getVJacobsthalOf(pend.size());
+	inserted.resize(pend.size(), false);
+	while (i < jacob.size())
+	{
+		idx = jacob[i] - 1;
+		if (idx >= static_cast<int>(pend.size()))
+			idx = pend.size() - 1;
+		if (idx >= 0 && !inserted[idx])
+		{
+			order.push_back(idx);
+			inserted[idx] = true;
+		}
+		++ i;
+	}
+	i = 0;
+	while (i < pend.size())
+	{
+		if (!inserted[i])
+			order.push_back(i);
+		++ i;
+	}
+	while (j < order.size())
+	{
+		value = pend[order[j]];
+		pos = std::lower_bound(main.begin(), main.end(), value);
+		main.insert(pos, value);
+		++ j;
+	}
+}
+
+std::vector<int>	PmergeMe::getVJacobsthalOf(int n)
+{
+	std::vector<int>	jacob;
+	int					next;
+	int					i;
+
+	jacob.push_back(0);
+	if (n < 2)
+		return (jacob);
+	jacob.push_back(1);
+	i = 2;
+	while (jacob.back() < n)
+	{
+		next = jacob[i - 1] + 2 * jacob[i - 2];
+		jacob.push_back(next);
+		++ i;
+	}
+	return (jacob);
+}
+
+std::deque<int>	PmergeMe::fordJohnson(std::deque<int>& nums)
+{
+	std::deque<int>::iterator	pos;
+	std::deque<int>				larger;
+	std::deque<int>				sorted;
+	std::deque<int>				pend;
+	std::deque<int>				pairsCopy;
+	size_t						i;
+	int							odd;
+	bool						hasOdd;
+
+	i = 0;
+	odd = -1;
+	hasOdd = false;
+	if (nums.size() <= 1)
+		return (nums);
+	if (nums.size() % 2 != 0)
+	{
+		odd = nums.back();
+		nums.pop_back();
+		hasOdd = true;
+	}
+	larger = createPairs(nums);
+	sorted = fordJohnson(larger);
+	pairsCopy = nums;
+	while (i < pairsCopy.size())
+	{
+		pend.push_back(pairsCopy[i + 1]);
+		i += 2;
+	}
+	if (!pend.empty())
+		mergeInsert(sorted, pend);
+	if (hasOdd)
+	{
+		pos = std::lower_bound(sorted.begin(), sorted.end(), odd);
+		sorted.insert(pos, odd);
+	}
+	return (sorted);
+}
+
+std::deque<int>	PmergeMe::createPairs(std::deque<int>& nums)
+{
+	std::deque<int>		larger;
+	size_t				i;
+	int					a;
+	int					b;
+
+	i = 0;
+	while (i + 1 < nums.size())
+	{
+		a = nums[i];
+		b = nums[i + 1];
+		if (a < b)
+			std::swap(a, b);
+		larger.push_back(a);
+		nums[i] = a;
+		nums[i + 1] = b;
+		i += 2;
+	}
+	return (larger);
+}
+
+void	PmergeMe::mergeInsert(std::deque<int>& main, std::deque<int>& pend)
+{
+	std::deque<int>::iterator	pos;
+	std::deque<int>				jacob;
+	std::deque<int>				order;
+	std::deque<bool>			inserted;
+	size_t						i;
+	size_t						j;
+	int							idx;
+	int							value;
+
+	i = 2;
+	j = 0;
+	idx = 0;
+	value = 0;
+	if (pend.empty())
+		return ;
+	jacob = getDJacobsthalOf(pend.size());
+	inserted.resize(pend.size(), false);
+	while (i < jacob.size())
+	{
+		idx = jacob[i] - 1;
+		if (idx >= static_cast<int>(pend.size()))
+			idx = pend.size() - 1;
+		if (idx >= 0 && !inserted[idx])
+		{
+			order.push_back(idx);
+			inserted[idx] = true;
+		}
+		++ i;
+	}
+	i = 0;
+	while (i < pend.size())
+	{
+		if (!inserted[i])
+			order.push_back(i);
+		++ i;
+	}
+	while (j < order.size())
+	{
+		value = pend[order[j]];
+		pos = std::lower_bound(main.begin(), main.end(), value);
+		main.insert(pos, value);
+		++ j;
+	}
+}
+
+std::deque<int>	PmergeMe::getDJacobsthalOf(int n)
+{
+	std::deque<int>	jacob;
+	int				next;
+	int				i;
+
+	jacob.push_back(0);
+	if (n < 2)
+		return (jacob);
+	jacob.push_back(1);
+	i = 2;
+	while (jacob.back() < n)
+	{
+		next = jacob[i - 1] + 2 * jacob[i - 2];
+		jacob.push_back(next);
+		++ i;
+	}
+	return (jacob);
+}
+
+PmergeMe::PmergeMe(char **argv)
+{
+	std::string	arg;
+	long		value;
+	int			i;
+
+	i = 1;
+	while (argv[i] != NULL)
+	{
+		arg = argv[i];
+		if (!isNumber(arg))
+		{
+			std::cerr << "Error: Invalid number format - " << arg << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		value = std::atol(arg.c_str());
+		if (value > INT_MAX || value < 0)
+		{
+			std::cerr << "Error: Number out of range (0 to INT_MAX) - " << arg << std::endl;
+			std::exit(EXIT_FAILURE);
+		}
+		vector.push_back(static_cast<int>(value));
+		deque.push_back(static_cast<int>(value));
+		++ i;
+	}
+	if (hasDuplicates(vector))
+	{
+		std::cerr << "Error: Duplicate values found" << std::endl;
+		std::exit(EXIT_FAILURE);
+	}
+}
+
+PmergeMe::PmergeMe(const PmergeMe& that)
 {
 	*this = that;
+}
+
+PmergeMe&	PmergeMe::operator=(const PmergeMe& that)
+{
+	if (this != &that)
+	{
+		vector = that.vector;
+		deque = that.deque;
+	}
+	return (*this);
 }
 
 PmergeMe::~PmergeMe()
 {
 }
 
-PmergeMe& PmergeMe::operator=(PmergeMe const& that)
+void	PmergeMe::sort()
 {
-	if (this != &that)
-	{
-		this->vec = that.vec;
-		this->deq = that.deq;
-	}
-	return (*this);
-}
+	std::vector<int>	vecCopy;
+	std::deque<int>		deqCopy;
+	clock_t				vecStart;
+	clock_t				vecEnd;
+	clock_t				deqStart;
+	clock_t				deqEnd;
+	double				vecTime;
+	double				deqTime;
+	std::vector<int>	sortedVec;
+	std::deque<int>		sortedDeq;
+	size_t				i;
 
-void	PmergeMe::parseInput(int argc, char **argv)
-{
-	int		i;
-	long	num;
-	
-	i = 1;
-	while (i < argc)
-	{
-		std::stringstream	ss(argv[i]);
-		ss >> num;
-		if (ss.fail() || !ss.eof())
-		{
-			std::cerr << "Error: invalid input" << std::endl;
-			std::exit(1);
-		}
-		if (num <= 0 || num > INT_MAX)
-		{
-			std::cerr << "Error: invalid positive integer" << std::endl;
-			std::exit(1);
-		}
-		this->vec.push_back(static_cast<int>(num));
-		this->deq.push_back(static_cast<int>(num));
-		i ++;
-	}
-}
-
-void	PmergeMe::insertionSortVector(std::vector<int>& arr, int left, int right)
-{
-	int	i;
-	int	j;
-	int	key;
-	
-	i = left + 1;
-	while (i <= right)
-	{
-		key = arr[i];
-		j = i - 1;
-		while (j >= left && arr[j] > key)
-		{
-			arr[j + 1] = arr[j];
-			j --;
-		}
-		arr[j + 1] = key;
-		i ++;
-	}
-}
-
-void	PmergeMe::mergeVector(std::vector<int>& arr, int left, int mid, int right)
-{
-	std::vector<int>	leftArr(arr.begin() + left, arr.begin() + mid + 1);
-	std::vector<int>	rightArr(arr.begin() + mid + 1, arr.begin() + right + 1);
-	size_t	i;
-	size_t	j;
-	size_t	k;
-	
 	i = 0;
-	j = 0;
-	k = left;
-	while (i < leftArr.size() && j < rightArr.size())
+	vecTime = 0.0;
+	deqTime = 0.0;
+	std::cout << "Before: ";
+	while (i < vector.size())
 	{
-		if (leftArr[i] <= rightArr[j])
-		{
-			arr[k] = leftArr[i];
-			i ++;
-		}
-		else
-		{
-			arr[k] = rightArr[j];
-			j ++;
-		}
-		k ++;
-	}
-	while (i < leftArr.size())
-	{
-		arr[k] = leftArr[i];
-		i ++;
-		k ++;
-	}
-	while (j < rightArr.size())
-	{
-		arr[k] = rightArr[j];
-		j ++;
-		k ++;
-	}
-}
-
-void	PmergeMe::fordJohnsonMergeInsertVector(std::vector<int>& arr, int left, int right)
-{
-	int	size;
-	
-	size = right - left + 1;
-	
-	if (size <= 10)
-	{
-		this->insertionSortVector(arr, left, right);
-		return ;
-	}
-	int	mid = left + (right - left) / 2;
-	this->fordJohnsonMergeInsertVector(arr, left, mid);
-	this->fordJohnsonMergeInsertVector(arr, mid + 1, right);
-	this->mergeVector(arr, left, mid, right);
-}
-
-void	PmergeMe::mergeInsertSortVector(std::vector<int>& arr)
-{
-	if (arr.size() <= 1)
-		return;
-	this->fordJohnsonMergeInsertVector(arr, 0, arr.size() - 1);
-}
-
-void	PmergeMe::insertionSortDeque(std::deque<int>& arr, int left, int right)
-{
-	int	i;
-	int	j;
-	int	key;
-	
-	i = left + 1;
-	while (i <= right)
-	{
-		key = arr[i];
-		j = i - 1;
-		while (j >= left && arr[j] > key)
-		{
-			arr[j + 1] = arr[j];
-			j --;
-		}
-		arr[j + 1] = key;
-		i ++;
-	}
-}
-
-void	PmergeMe::mergeDeque(std::deque<int>& arr, int left, int mid, int right)
-{
-	std::deque<int>	leftArr;
-	std::deque<int>	rightArr;
-	size_t			i;
-	size_t			j;
-	size_t			k;
-	
-	i = left;
-	while (i <= static_cast<size_t>(mid))
-	{
-		leftArr.push_back(arr[i]);
-		i ++;
-	}
-	i = mid + 1;
-	while (i <= static_cast<size_t>(right))
-	{
-		rightArr.push_back(arr[i]);
-		i ++;
-	}
-	i = 0;
-	j = 0;
-	k = left;
-	while (i < leftArr.size() && j < rightArr.size())
-	{
-		if (leftArr[i] <= rightArr[j])
-		{
-			arr[k] = leftArr[i];
-			i ++;
-		}
-		else
-		{
-			arr[k] = rightArr[j];
-			j ++;
-		}
-		k ++;
-	}
-	while (i < leftArr.size())
-	{
-		arr[k] = leftArr[i];
-		i ++;
-		k ++;
-	}
-	while (j < rightArr.size())
-	{
-		arr[k] = rightArr[j];
-		j ++;
-		k ++;
-	}
-}
-
-void	PmergeMe::fordJohnsonMergeInsertDeque(std::deque<int>& arr, int left, int right)
-{
-	int	size;
-	
-	size = right - left + 1;
-	if (size <= 10)
-	{
-		this->insertionSortDeque(arr, left, right);
-		return ;
-	}
-	int	mid = left + (right - left) / 2;
-	this->fordJohnsonMergeInsertDeque(arr, left, mid);
-	this->fordJohnsonMergeInsertDeque(arr, mid + 1, right);
-	this->mergeDeque(arr, left, mid, right);
-}
-
-void	PmergeMe::mergeInsertSortDeque(std::deque<int>& arr)
-{
-	if (arr.size() <= 1)
-		return ;
-	this->fordJohnsonMergeInsertDeque(arr, 0, arr.size() - 1);
-}
-
-void	PmergeMe::displaySequence(std::string const& msg, std::vector<int> const& seq) const
-{
-	size_t	i;
-	
-	std::cout << msg;
-	i = 0;
-	while (i < seq.size())
-	{
-		std::cout << seq[i];
-		if (i + 1 < seq.size())
+		std::cout << vector[i];
+		if (i + 1 < vector.size())
 			std::cout << " ";
-		i ++;
+		++ i;
 	}
 	std::cout << std::endl;
-}
-
-void	PmergeMe::displaySequence(std::string const& msg, std::deque<int> const& seq) const
-{
-	size_t	i;
-	
-	std::cout << msg;
+	vecCopy = vector;
+	deqCopy = deque;
+	vecStart = clock();
+	sortedVec = fordJohnson(vecCopy);
+	vecEnd = clock();
+	vecTime = static_cast<double>(vecEnd - vecStart) / CLOCKS_PER_SEC * 1000000;
+	deqStart = clock();
+	sortedDeq = fordJohnson(deqCopy);
+	deqEnd = clock();
+	deqTime = static_cast<double>(deqEnd - deqStart) / CLOCKS_PER_SEC * 1000000;
+	std::cout << "After: ";
 	i = 0;
-	while (i < seq.size())
+	while (i < sortedVec.size())
 	{
-		std::cout << seq[i];
-		if (i + 1 < seq.size())
+		std::cout << sortedVec[i];
+		if (i + 1 < sortedVec.size())
 			std::cout << " ";
-		i ++;
+		++ i;
 	}
 	std::cout << std::endl;
-}
-
-double	PmergeMe::getTimeInMicroseconds(clock_t start, clock_t end) const
-{
-	return (static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000000.0);
-}
-
-void	PmergeMe::sortAndDisplay(int argc, char **argv)
-{
-	clock_t	startVec;
-	clock_t	endVec;
-	clock_t	startDeq;
-	clock_t	endDeq;
-	
-	this->parseInput(argc, argv);
-	this->displaySequence("Before: ", this->vec);
-	startVec = clock();
-	this->mergeInsertSortVector(this->vec);
-	endVec = clock();
-	startDeq = clock();
-	this->mergeInsertSortDeque(this->deq);
-	endDeq = clock();
-	this->displaySequence("After: ", this->vec);
-	double	timeVec = this->getTimeInMicroseconds(startVec, endVec);
-	double	timeDeq = this->getTimeInMicroseconds(startDeq, endDeq);
-	std::cout << "Time to process a range of " << this->vec.size() 
-	          << " elements with std::vector : " << std::fixed 
-	          << std::setprecision(5) << timeVec << " us" << std::endl;
-	
-	std::cout << "Time to process a range of " << this->deq.size() 
-	          << " elements with std::deque : " << std::fixed 
-	          << std::setprecision(5) << timeDeq << " us" << std::endl;
+	std::cout << "Time to process a range of " << vector.size()
+		<< " elements with std::vector : " << vecTime << " us" << std::endl;
+	std::cout << "Time to process a range of " << deque.size()
+		<< " elements with std::deque  : " << deqTime << " us" << std::endl;
 }
