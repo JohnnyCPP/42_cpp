@@ -4,7 +4,7 @@ int	main(int argc, char **argv)
 {
 	if (argc < 2)
 	{
-		std::cout << "Usage: ./PmergeMe <numbers>" << std::endl;
+		std::cerr << "Usage: ./PmergeMe <numbers>" << std::endl;
 		return (EXIT_FAILURE);
 	}
 	PmergeMe pmergeMe(argv);
