@@ -1,5 +1,5 @@
-#ifndef BITCOINEXCHANGE_HPP
-# define BITCOINEXCHANGE_HPP
+#ifndef BITCOIN_EXCHANGE_HPP
+# define BITCOIN_EXCHANGE_HPP
 
 # include <map>
 # include <string>
@@ -8,27 +8,40 @@
 # include <iostream>
 # include <cstdlib>
 # include <climits>
+# include <stdexcept>
+# include <limits>
+# include <cmath>
+
+class	DatabaseOpenException : public std::runtime_error
+{
+public:
+
+	DatabaseOpenException(const std::string& msg) : std::runtime_error(msg)
+	{}
+};
 
 class BitcoinExchange
 {
-	private:
+private:
 
-		std::map<std::string, double>	data;
+	std::map<std::string, double>	data;
 
-		bool	isLeapYear(int year) const;
-		bool	isValidDate(std::string const& date) const;
-		bool	isValidValue(float value) const;
-		float	getExchangeRate(std::string const& date) const;
+	bool	isLeapYear(int year) const;
+	bool	isValidDate(std::string const& date) const;
+	bool	isValidValue(float value) const;
+	float	getExchangeRate(std::string const& date) const;
+	bool	wouldOverflow(double value, double rate) const;
+	double	safeMultiply(double value, double rate) const;
 
-	public:
+public:
 
-		BitcoinExchange();
-		BitcoinExchange(BitcoinExchange const& that);
-		~BitcoinExchange();
-		BitcoinExchange& operator=(BitcoinExchange const& that);
+	BitcoinExchange();
+	BitcoinExchange(BitcoinExchange const& that);
+	~BitcoinExchange();
+	BitcoinExchange& operator=(BitcoinExchange const& that);
 
-		void	loadDatabase(std::string const& filename);
-		void	processInput(std::string const& filename);
+	void	loadDatabase(std::string const& filename);
+	void	processInputDB(std::string const& filename);
 };
 
 #endif

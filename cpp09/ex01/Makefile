@@ -4,6 +4,8 @@ GCC				= c++
 FLAGS			= -Wall -Wextra -Werror -std=c++98
 SANITIZE_FLAGS	= -fsanitize=address
 
+HPP_FILES		= RPN.hpp
+
 SRC_FILES		= RPN.cpp main.cpp
 OBJ_FILES		= $(SRC_FILES:.cpp=.o)
 
@@ -11,7 +13,7 @@ OBJ_FILES		= $(SRC_FILES:.cpp=.o)
 all: ${NAME}
 
 
-%.o: %.cpp
+%.o: %.cpp ${HPP_FILES}
 	${GCC} ${FLAGS} -c $< -o $@
 
 
