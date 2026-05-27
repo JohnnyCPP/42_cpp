@@ -6,6 +6,8 @@
 # include <iostream>
 # include <sstream>
 # include <cstdlib>
+# include <limits>
+# include <cmath>
 
 class RPN
 {
@@ -14,6 +16,12 @@ class RPN
 		std::stack<double>	stack;
 		bool	isOperator(char c) const;
 		double	applyOperator(char op, double a, double b) const;
+
+
+		bool	wouldOverflowAddition(double a, double b) const;
+		bool	wouldOverflowSubtraction(double a, double b) const;
+		bool	wouldOverflowMultiplication(double a, double b) const;
+		bool	wouldOverflowDivision(double a, double b) const;
 
 	public:
 

@@ -46,7 +46,7 @@ $PROG "42"
 echo
 
 echo "Test 9: -5 3 +"
-echo "Expected: -2"
+echo "Expected: negative numbers error"
 $PROG "-5 3 +"
 echo
 
