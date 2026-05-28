@@ -90,42 +90,27 @@ double	RPN::applyOperator(char op, double a, double b) const
 	if (op == '+')
 	{
 		if (wouldOverflowAddition(a, b))
-		{
-			std::cerr << "Error: addition would overflow" << std::endl;
-			return (0);
-		}
+			throw RPNOperationException("Error: addition would overflow.");
 		result = a + b;
 	}
 	else if (op == '-')
 	{
 		if (wouldOverflowSubtraction(a, b))
-		{
-			std::cerr << "Error: subtraction would overflow" << std::endl;
-			return (0);
-		}
+			throw RPNOperationException("Error: subtraction would overflow.");
 		result = a - b;
 	}
 	else if (op == '*')
 	{
 		if (wouldOverflowMultiplication(a, b))
-		{
-			std::cerr << "Error: multiplication would overflow" << std::endl;
-			return (0);
-		}
+			throw RPNOperationException("Error: multiplication would overflow.");
 		result = a * b;
 	}
 	else
 	{
 		if (b == 0.0)
-		{
-			std::cerr << "Error: division by zero" << std::endl;
-			return (0);
-		}
+			throw RPNOperationException("Error: division by zero.");
 		if (wouldOverflowDivision(a, b))
-		{
-			std::cerr << "Error: division would overflow" << std::endl;
-			return (0);
-		}
+			throw RPNOperationException("Error: division would overflow.");
 		result = a / b;
 	}
 	return (result);
@@ -148,17 +133,11 @@ double	RPN::evaluate(std::string const& expression)
 			continue ;
 		}
 		if (expression[i] == '-' && i + 1 < expression.size() && isdigit(expression[i + 1]))
-		{
-			std::cerr << "Error: negative numbers are not allowed" << std::endl;
-			return (0);
-		}
+			throw RPNOperationException("Error: negative numbers are not allowed.");
 		if (isOperator(expression[i]))
 		{
 			if (stack.size() < 2)
-			{
-				std::cerr << "Error: insufficient operands" << std::endl;
-				return (0);
-			}
+				throw RPNOperationException("Error: insufficient operands.");
 			b = stack.top();
 			stack.pop();
 			a = stack.top();
@@ -179,15 +158,9 @@ double	RPN::evaluate(std::string const& expression)
 			stack.push(num);
 		}
 		else
-		{
-			std::cerr << "Error: invalid token" << std::endl;
-			return (0);
-		}
+			throw RPNOperationException("Error: invalid token.");
 	}
 	if (stack.size() != 1)
-	{
-		std::cerr << "Error: invalid expression" << std::endl;
-		return (0);
-	}
+		throw RPNOperationException("Error: invalid expression.");
 	return (stack.top());
 }

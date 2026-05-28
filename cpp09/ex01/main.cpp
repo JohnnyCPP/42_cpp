@@ -8,10 +8,17 @@ int	main(int argc, char **argv)
 	if (argc != 2)
 	{
 		std::cerr << "Usage: RPN <expression>" << std::endl;
-		return (1);
+		return (EXIT_FAILURE);
 	}
-	result = rpn.evaluate(argv[1]);
-	if (result != 0 || (argv[1][0] == '0' && argv[1][1] == '\0'))
+	try
+	{
+		result = rpn.evaluate(argv[1]);
 		std::cout << result << std::endl;
-	return (0);
+	}
+	catch (const RPNOperationException& exception)
+	{
+		std::cerr << exception.what() << std::endl;
+		return (EXIT_FAILURE);
+	}
+	return (EXIT_SUCCESS);
 }

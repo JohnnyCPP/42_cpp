@@ -9,28 +9,36 @@
 # include <limits>
 # include <cmath>
 
+class	RPNOperationException : public std::runtime_error
+{
+public:
+
+	RPNOperationException(const std::string& msg) : std::runtime_error(msg)
+	{}
+};
+
 class RPN
 {
-	private:
+private:
 
-		std::stack<double>	stack;
-		bool	isOperator(char c) const;
-		double	applyOperator(char op, double a, double b) const;
+	std::stack<double>	stack;
+	bool	isOperator(char c) const;
+	double	applyOperator(char op, double a, double b) const;
 
 
-		bool	wouldOverflowAddition(double a, double b) const;
-		bool	wouldOverflowSubtraction(double a, double b) const;
-		bool	wouldOverflowMultiplication(double a, double b) const;
-		bool	wouldOverflowDivision(double a, double b) const;
+	bool	wouldOverflowAddition(double a, double b) const;
+	bool	wouldOverflowSubtraction(double a, double b) const;
+	bool	wouldOverflowMultiplication(double a, double b) const;
+	bool	wouldOverflowDivision(double a, double b) const;
 
-	public:
+public:
 
-		RPN();
-		RPN(RPN const& that);
-		~RPN();
-		RPN & operator=(RPN const& that);
+	RPN();
+	RPN(RPN const& that);
+	~RPN();
+	RPN & operator=(RPN const& that);
 
-		double	evaluate(std::string const& expression);
+	double	evaluate(std::string const& expression);
 };
 
 #endif
